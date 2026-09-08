@@ -1,0 +1,48 @@
+## ====================================================================
+## Visual Studio & .NET GitIgnore
+## ====================================================================
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+Generated\ Files/
+
+# Visual Studio temporary files, caches, and user-specific settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.dbmdl
+*.jfm
+*.slnx.sqlite
+
+# Visual Studio Code
+.vscode/
+
+# ReSharper and Rider
+_ReSharper*/
+*.ReSharper.user
+*.dotCover
+
+# Test results and coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.visualstate.xml
+
+# Backup and temp files
+*.tmp
+*.temp
+*~
+*.swp
+*.cache
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

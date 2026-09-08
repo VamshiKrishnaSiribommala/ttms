@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Access Restricted";
+}
+
+<div style="max-width: 500px; margin: 4rem auto; text-align: center;">
+    <div class="card" style="border-top: 4px solid var(--danger);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🚫</div>
+        <h2 style="color: var(--danger); font-weight: 800; margin-bottom: 0.5rem;">Access Restricted</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You do not have administrative permissions to view this section.</p>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Return to Dashboard</a>
+    </div>
+</div>

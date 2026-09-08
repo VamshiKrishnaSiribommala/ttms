@@ -1,0 +1,166 @@
+@{
+    ViewData["Title"] = "Operations Dashboard";
+    bool isAdmin = ViewBag.Role == "Admin";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">Welcome, @ViewBag.FullName</h1>
+        <p style="color: var(--text-muted);">Station Operational Control &bull; Secunderabad Junction (SC) &bull; SCR</p>
+    </div>
+    <div>
+        <span class="badge @(ViewBag.DbConnected ? "badge-success" : "badge-danger")" style="font-size: 0.85rem; padding: 6px 12px;">
+            @(ViewBag.DbConnected ? "🟢 SQL Database Online" : "🔴 Database Offline")
+        </span>
+    </div>
+</div>
+
+<!-- Metrics Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 0;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Station Registers</span>
+        <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 4px 0;">41</h2>
+        <span style="font-size: 0.8rem; color: #27ae60;">Active Operational Logbooks</span>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--accent); margin-bottom: 0;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Train Authorities</span>
+        <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 4px 0;">22</h2>
+        <span style="font-size: 0.8rem; color: #2980b9;">Official Statutory Forms</span>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--success); margin-bottom: 0;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Database Tables</span>
+        <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 4px 0;">@(ViewBag.TmsTables + ViewBag.TwTables)</h2>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">TMS (@ViewBag.TmsTables) + TW (@ViewBag.TwTables)</span>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--info); margin-bottom: 0;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Environment</span>
+        <div style="font-size: 1.1rem; font-weight: 700; margin: 8px 0; font-family: 'JetBrains Mono', monospace;">
+            @(OperatingSystem.IsWindows() ? "Windows 10/11" : "Linux (Ubuntu/Debian)")
+        </div>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">.NET 8 LTS &bull; Production SDK</span>
+    </div>
+</div>
+
+<!-- Fast Access Shortcuts -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <!-- Registers Quick Action -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">📖 Frequent Station Registers</h3>
+            <a asp-controller="Registers" asp-action="Index" class="btn btn-outline" style="font-size: 0.8rem;">View All 41 &rarr;</a>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a asp-controller="Registers" asp-action="Form" asp-route-id="001" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>REG-001</strong> &bull; Station Master's Diary
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Primary daily event logbook</div>
+                </div>
+                <span class="btn btn-primary" style="font-size: 0.75rem; padding: 4px 10px;">Open Form &rarr;</span>
+            </a>
+
+            <a asp-controller="Registers" asp-action="Form" asp-route-id="002" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>REG-002</strong> &bull; Train Signal Register (TSR)
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Train arrivals, departures, & passing PN</div>
+                </div>
+                <span class="btn btn-primary" style="font-size: 0.75rem; padding: 4px 10px;">Open Form &rarr;</span>
+            </a>
+
+            <a asp-controller="Registers" asp-action="Form" asp-route-id="004" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>REG-004</strong> &bull; Caution Order Register
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Speed restriction & track notices</div>
+                </div>
+                <span class="btn btn-primary" style="font-size: 0.75rem; padding: 4px 10px;">Open Form &rarr;</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Authorities Quick Action -->
+    <div class="card" style="margin-bottom: 0;">
+        <div class="card-header">
+            <h3 class="card-title">🛡️ Train Working Authorities</h3>
+            <a asp-controller="Authorities" asp-action="Index" class="btn btn-outline" style="font-size: 0.8rem;">View All 22 &rarr;</a>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a asp-controller="Authorities" asp-action="Form" asp-route-id="001" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>AUTH-001</strong> &bull; Advance Defective Signal Authority
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">T/369(3b) for defective advance starter</div>
+                </div>
+                <span class="btn btn-warning" style="font-size: 0.75rem; padding: 4px 10px;">Issue Authority &rarr;</span>
+            </a>
+
+            <a asp-controller="Authorities" asp-action="Form" asp-route-id="002" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>AUTH-002</strong> &bull; Pass Signals in 'ON' Position
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Passing Home / Starter signals at danger</div>
+                </div>
+                <span class="btn btn-warning" style="font-size: 0.75rem; padding: 4px 10px;">Issue Authority &rarr;</span>
+            </a>
+
+            <a asp-controller="Authorities" asp-action="Form" asp-route-id="018" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text);">
+                <div>
+                    <strong>AUTH-018</strong> &bull; Paper Line Clear Ticket (UP / DOWN)
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">T/C.1425 & T/D.1425 line clear tickets</div>
+                </div>
+                <span class="btn btn-warning" style="font-size: 0.75rem; padding: 4px 10px;">Issue Authority &rarr;</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@if (isAdmin && ViewBag.UserList != null)
+{
+    var userTable = (DataTable)ViewBag.UserList;
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">👥 Station Staff Personnel Management</h3>
+            <span class="badge badge-primary">@userTable.Rows.Count Registered Staff</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                        <th>Department</th>
+                        <th>Email / Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow row in userTable.Rows)
+                    {
+                        string status = row["Status"]?.ToString() ?? "Active";
+                        bool isActive = string.Equals(status, "Active", StringComparison.OrdinalIgnoreCase);
+                        <tr>
+                            <td><strong>#@row["UserId"]</strong></td>
+                            <td>@row["FullName"]</td>
+                            <td><code>@row["Username"]</code></td>
+                            <td>@row["Department"]</td>
+                            <td>@row["Email"]</td>
+                            <td>
+                                <span class="badge @(isActive ? "badge-success" : "badge-danger")">@status</span>
+                            </td>
+                            <td>
+                                <form method="post" asp-action="ToggleUserStatus" style="display: inline;">
+                                    <input type="hidden" name="userId" value="@row["UserId"]" />
+                                    <input type="hidden" name="status" value="@status" />
+                                    <button type="submit" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 8px;">
+                                        @(isActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

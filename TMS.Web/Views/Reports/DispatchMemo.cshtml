@@ -1,0 +1,101 @@
+@{
+    var def = (TMS.Core.Models.RegisterDefinition)ViewBag.Definition;
+    string logId = ViewBag.LogId;
+    var fields = (Dictionary<string, string>)ViewBag.Fields;
+    string memoText = ViewBag.MemoText;
+    var contacts = (List<TMS.Core.Services.DispatchContact>)ViewBag.Contacts;
+    ViewData["Title"] = $"Official Memo - {logId}";
+}
+
+<div style="max-width: 850px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <button onclick="history.back()" class="btn btn-outline">&larr; Back to Records</button>
+        <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <!-- Official Memo Sheet -->
+    <div class="card" style="border: 2px solid var(--primary); padding: 2.5rem; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+        <div style="text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="font-size: 1rem; font-weight: 800; color: var(--primary); letter-spacing: 2px;">GOVERNMENT OF INDIA &bull; MINISTRY OF RAILWAYS</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: #1e293b; margin-top: 4px;">SOUTH CENTRAL RAILWAY &bull; SECUNDERABAD DIVISION</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">Station Master's Office &bull; Secunderabad Junction (SC)</div>
+            <div style="display: inline-block; background: var(--primary); color: #fff; padding: 4px 16px; border-radius: 4px; font-weight: 700; margin-top: 10px; font-size: 0.95rem;">
+                OFFICIAL RECORD MEMORANDUM
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.95rem;">
+            <div>
+                <div><strong>Log Reference:</strong> <code style="font-size: 1rem; color: var(--primary); font-weight: 800;">@logId</code></div>
+                <div><strong>Register / Authority:</strong> @def.Code &bull; @def.Title</div>
+            </div>
+            <div style="text-align: right;">
+                <div><strong>Date & Time:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                <div><strong>Station Code:</strong> SC (55301)</div>
+            </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <h4 style="color: var(--primary); font-size: 1rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
+                Recorded Parameters & Entry Details
+            </h4>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                @foreach (var kvp in fields)
+                {
+                    if (kvp.Key != "LogID" && !string.IsNullOrWhiteSpace(kvp.Value))
+                    {
+                        <tr>
+                            <td style="padding: 6px 0; width: 35%; font-weight: 600; color: #475569;">@kvp.Key:</td>
+                            <td style="padding: 6px 0; color: #1e293b;">@kvp.Value</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 1.5rem;">
+            <div>
+                <div>Digitally Logged via TMS Terminal</div>
+                <div>System Hash Verification: OK</div>
+            </div>
+            <div style="text-align: right;">
+                <div>___________________________________</div>
+                <div style="font-weight: 700; color: #1e293b; margin-top: 4px;">Signature of Station Master on Duty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instant Mobile Dispatch Center -->
+    <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+            <h3 class="card-title">📲 Instant Mobile Dispatch Center</h3>
+            <span class="badge badge-success">Direct WhatsApp & Telegram</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Transmit this official memo directly to Section Controller, Signal Inspector, or Station In-Charge with one click.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            @foreach (var contact in contacts)
+            {
+                string waUrl = TMS.Core.Services.RecordDispatchService.GenerateWhatsAppUrl(contact.PhoneNumber, memoText);
+                string tgUrl = TMS.Core.Services.RecordDispatchService.GenerateTelegramUrl(contact.TelegramHandle, memoText);
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px;">
+                    <div>
+                        <strong>@contact.Name</strong> &bull; <span style="color: var(--primary);">@contact.Designation</span>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">@contact.PhoneNumber &bull; @contact.TelegramHandle</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <a href="@waUrl" target="_blank" class="btn btn-success" style="font-size: 0.8rem; padding: 6px 12px;">
+                            💬 WhatsApp
+                        </a>
+                        <a href="@tgUrl" target="_blank" class="btn btn-info" style="font-size: 0.8rem; padding: 6px 12px;">
+                            ✈️ Telegram
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

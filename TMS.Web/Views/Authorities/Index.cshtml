@@ -1,0 +1,58 @@
+@model List<TMS.Core.Models.RegisterDefinition>
+@{
+    ViewData["Title"] = "Train Working Authorities (22)";
+    string selectedCat = ViewBag.SelectedCategory ?? "All";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <h1 style="font-size: 1.7rem; font-weight: 800; color: var(--primary);">Train Working Authorities Master Directory</h1>
+        <p style="color: var(--text-muted);">22 Statutory Operating Forms &bull; Safe Train Movement Clearances</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <a asp-controller="Reports" asp-action="Index" asp-route-reportType="Authorities" class="btn btn-outline">📊 Authority Audit Log</a>
+    </div>
+</div>
+
+<!-- Search & Filter Bar -->
+<div class="card" style="padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+    <form method="get" asp-action="Index" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <input type="text" name="search" class="form-control" style="flex: 2; min-width: 200px;" placeholder="Search authority by name, code, or description..." value="@ViewBag.Search" />
+        
+        <select name="category" class="form-control" style="flex: 1; min-width: 160px;">
+            @foreach (string cat in ViewBag.Categories)
+            {
+                <option value="@cat" selected="@(selectedCat == cat ? "selected" : null)">@cat</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-warning">Filter</button>
+        <a asp-action="Index" class="btn btn-outline">Reset</a>
+    </form>
+</div>
+
+<!-- Grid of 22 Authorities -->
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.25rem;">
+    @foreach (var auth in Model)
+    {
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0; border-top: 3px solid var(--accent);">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                    <span class="badge badge-warning" style="font-size: 0.75rem;">@auth.Code</span>
+                    <span class="badge badge-primary" style="font-size: 0.7rem;">@auth.Category</span>
+                </div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">@auth.Title</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.4;">@auth.Description</p>
+            </div>
+
+            <div style="display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 1rem;">
+                <a asp-action="Form" asp-route-id="@auth.Number" class="btn btn-warning" style="flex: 1; font-size: 0.85rem;">
+                    🛡️ Issue Authority
+                </a>
+                <a asp-action="ViewRecords" asp-route-id="@auth.Number" class="btn btn-outline" style="flex: 1; font-size: 0.85rem;">
+                    📋 Issued Logs
+                </a>
+            </div>
+        </div>
+    }
+</div>

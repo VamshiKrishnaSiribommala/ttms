@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "Staff Registration";
+}
+
+<div style="max-width: 650px; margin: 2rem auto;">
+    <div class="card" style="box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 4px solid var(--accent);">
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">Staff Registration Form</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Create a new personnel account for Station Registers & Authorities</p>
+        </div>
+
+        <form method="post" asp-action="Register">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" name="fullName" class="form-control" placeholder="e.g. Ramesh Kumar" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Department *</label>
+                    <select name="department" class="form-control" required>
+                        <option value="Operating">Operating (Station Master / Traffic)</option>
+                        <option value="Signaling">S&T (Signal & Telecommunication)</option>
+                        <option value="Engineering">Civil Engineering (P-Way)</option>
+                        <option value="Electrical">Electrical / Traction (TRD)</option>
+                        <option value="Mechanical">Mechanical (C&W)</option>
+                        <option value="Safety">Safety & Inspection</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Official Email *</label>
+                    <input type="email" name="email" class="form-control" placeholder="staff@railways.gov.in" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mobile Number *</label>
+                    <input type="tel" name="phone" class="form-control" placeholder="+91 98765 43210" required />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" name="dob" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <select name="gender" class="form-control">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Residential Address</label>
+                <input type="text" name="address" class="form-control" placeholder="Railway Quarters / Address" />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Username *</label>
+                    <input type="text" name="username" class="form-control" placeholder="e.g. sm_ramesh" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">College / Railway Training School</label>
+                    <input type="text" name="collegeOrOrg" class="form-control" placeholder="ZRTI Moula-Ali" />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    <input type="password" name="password" class="form-control" placeholder="Min 6 characters" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password *</label>
+                    <input type="password" name="confirmPassword" class="form-control" placeholder="Re-type password" required />
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 2; padding: 12px;">Create Account</button>
+                <a asp-action="Login" class="btn btn-outline" style="flex: 1; padding: 12px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

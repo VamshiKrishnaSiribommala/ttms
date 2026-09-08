@@ -1,0 +1,110 @@
+@model System.Data.DataTable
+@{
+    ViewData["Title"] = "Dynamic Reports & Audit Center";
+    string reportType = ViewBag.ReportType ?? "Registers";
+    string target = ViewBag.Target ?? "001";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <h1 style="font-size: 1.7rem; font-weight: 800; color: var(--primary);">Dynamic Reports & Compliance Audit</h1>
+        <p style="color: var(--text-muted);">Inspection, Audit, & Cross-Register Analytics</p>
+    </div>
+</div>
+
+<!-- Report Query Builder -->
+<div class="card">
+    <form method="get" asp-action="Index" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Domain</label>
+            <select name="reportType" class="form-control" onchange="this.form.submit()">
+                <option value="Registers" selected="@(reportType == "Registers" ? "selected" : null)">Station Registers (TMS)</option>
+                <option value="Authorities" selected="@(reportType == "Authorities" ? "selected" : null)">Train Working Authorities (TW)</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Target Logbook / Form</label>
+            <select name="target" class="form-control">
+                @if (reportType == "Registers")
+                {
+                    for (int i = 1; i <= 41; i++)
+                    {
+                        string num = i.ToString("D3");
+                        var reg = TMS.Core.Models.RegistryMetadata.GetRegisterByNumber(i.ToString());
+                        <option value="@num" selected="@(target == num || target == i.ToString() ? "selected" : null)">
+                            REG-@num: @(reg?.Title ?? $"Register {num}")
+                        </option>
+                    }
+                }
+                else
+                {
+                    for (int i = 1; i <= 22; i++)
+                    {
+                        string num = i.ToString("D3");
+                        var auth = TMS.Core.Models.RegistryMetadata.GetAuthorityByNumber(i.ToString());
+                        <option value="@num" selected="@(target == num || target == i.ToString() ? "selected" : null)">
+                            AUTH-@num: @(auth?.Title ?? $"Authority {num}")
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">From Date</label>
+            <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">To Date</label>
+            <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate" />
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">🔍 Run Audit</button>
+            <a asp-action="Index" class="btn btn-outline">Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Results Card -->
+<div class="card" style="padding: 0; overflow: hidden;">
+    <div class="card-header" style="padding: 1.25rem; margin-bottom: 0;">
+        <h3 class="card-title">Audit Results: @ViewBag.SelectedTitle</h3>
+        <span class="badge badge-primary">@Model.Rows.Count Records Loaded</span>
+    </div>
+
+    <div class="table-responsive">
+        @if (Model.Rows.Count == 0 || (Model.Columns.Count == 1 && Model.Columns[0].ColumnName == "Status"))
+        {
+            <div style="text-align: center; padding: 3rem 1rem;">
+                <p style="color: var(--text-muted); font-size: 1rem;">No records matched the selected criteria.</p>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.Columns)
+                        {
+                            <th>@col.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.Rows)
+                    {
+                        <tr>
+                            @foreach (System.Data.DataColumn col in Model.Columns)
+                            {
+                                <td>@(row[col]?.ToString() ?? "")</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Train Management System (TMS)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-light: #004c99;
+            --primary-dark: #002244;
+            --accent: #d4af37;
+            --accent-hover: #b8972e;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border: #e2e8f0;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header / Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: #ffffff;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .brand-badge {
+            background: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            display: block;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-item a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .os-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.15);
+            color: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .user-pill {
+            background: rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-logout {
+            background: rgba(231, 76, 60, 0.2);
+            color: #ff7675;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: #ffffff;
+        }
+
+        /* Container & Layout */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-light); }
+
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { background: #27ae60; }
+
+        .btn-info { background: var(--info); color: #fff; }
+        .btn-info:hover { background: #2980b9; }
+
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-warning:hover { background: #d35400; }
+
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { background: #edf2f7; }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: #ffffff;
+            color: var(--text);
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: #334155;
+        }
+
+        .table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-primary { background: #cce5ff; color: #004085; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-dark);
+            color: #94a3b8;
+            padding: 1.5rem 2rem;
+            font-size: 0.85rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a asp-controller="Home" asp-action="Index" class="navbar-brand">
+            <span class="brand-badge">TMS</span>
+            <div>
+                <span class="brand-title">Indian Railways Train Management System</span>
+                <span class="brand-sub">South Central Railway | Secunderabad Division (SC)</span>
+            </div>
+        </a>
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <ul class="nav-menu">
+                <li class="nav-item"><a asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                <li class="nav-item"><a asp-controller="Registers" asp-action="Index">Station Registers (41)</a></li>
+                <li class="nav-item"><a asp-controller="Authorities" asp-action="Index">Train Authorities (22)</a></li>
+                <li class="nav-item"><a asp-controller="Reports" asp-action="Index">Dynamic Reports</a></li>
+            </ul>
+
+            <div class="user-nav">
+                <span class="os-badge" title="Operating System Runtime">@(OperatingSystem.IsWindows() ? "🪟 Windows" : "🐧 Linux") .NET 8</span>
+                <div class="user-pill">
+                    <span>👤 <strong>@User.Identity.Name</strong> (@(User.IsInRole("Admin") ? "Admin" : "Staff"))</span>
+                </div>
+                <a asp-controller="Account" asp-action="Logout" class="btn-logout">Logout</a>
+            </div>
+        }
+        else
+        {
+            <div class="user-nav">
+                <span class="os-badge">@(OperatingSystem.IsWindows() ? "🪟 Windows" : "🐧 Linux") .NET 8</span>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.4);">Login</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-warning">Sign Up</a>
+            </div>
+        }
+    </header>
+
+    <main class="container">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <span>✅ @TempData["SuccessMessage"]</span>
+                <button type="button" onclick="this.parentElement.style.display='none';" style="background:none;border:none;cursor:pointer;font-size:1.2rem;">&times;</button>
+            </div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                <span>⚠️ @ViewBag.Error</span>
+                <button type="button" onclick="this.parentElement.style.display='none';" style="background:none;border:none;cursor:pointer;font-size:1.2rem;">&times;</button>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <p>Train Management System (TMS) &copy; @DateTime.Now.Year Indian Railways &bull; Cross-Platform Production Architecture (.NET 8 LTS &bull; Docker &bull; SQL Server 2022)</p>
+    </footer>
+</body>
+</html>

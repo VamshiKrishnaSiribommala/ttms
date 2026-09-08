@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div style="max-width: 600px; margin: 4rem auto; text-align: center;">
+    <div class="card" style="border-top: 4px solid var(--danger);">
+        <h2 style="color: var(--danger); font-weight: 800; margin-bottom: 0.5rem;">An Error Occurred</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">An unexpected error occurred processing your request. Please try again or return to dashboard.</p>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Return to Dashboard</a>
+    </div>
+</div>

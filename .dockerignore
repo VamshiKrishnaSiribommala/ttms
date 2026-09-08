@@ -1,0 +1,12 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/*.user
+**/*.suo
+**/*.tmp
+**/node_modules
+Database/*.bak
+Database/*.mdf
+Database/*.ldf

@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "System Login";
+    string defaultType = ViewBag.UserType ?? "User";
+}
+
+<div style="max-width: 480px; margin: 3rem auto;">
+    <div class="card" style="box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--primary);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="display: inline-block; background: var(--primary); color: #fff; width: 60px; height: 60px; line-height: 60px; border-radius: 50%; font-size: 1.8rem; margin-bottom: 1rem;">🚆</div>
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">Sign In to TMS</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Station Registers & Train Working Portal</p>
+        </div>
+
+        <form method="post" asp-action="Login">
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+            <div class="form-group">
+                <label class="form-label">Access Level</label>
+                <div style="display: flex; gap: 10px;">
+                    <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: #f8fafc;">
+                        <input type="radio" name="userType" value="User" @(defaultType == "User" ? "checked" : "") />
+                        <strong>Station Staff</strong>
+                    </label>
+                    <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: #f8fafc;">
+                        <input type="radio" name="userType" value="Admin" @(defaultType == "Admin" ? "checked" : "") />
+                        <strong>Administrator</strong>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="username">Username / Staff ID</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="e.g. admin or staff_user" value="@ViewBag.Username" required autofocus />
+            </div>
+
+            <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label" for="password">Password</label>
+                    <a asp-action="ForgotPassword" style="font-size: 0.8rem; color: var(--info); text-decoration: none;">Forgot password?</a>
+                </div>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 1rem;">
+                Sign In to Terminal
+            </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+            <p>New station staff? <a asp-action="Register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register account here</a></p>
+            <div style="margin-top: 12px; background: #f8fafc; padding: 10px; border-radius: 6px; font-size: 0.8rem;">
+                💡 <strong>Default Administrator:</strong> <code>admin</code> / <code>Admin@123</code>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+@model TMS.Core.Models.RegisterDefinition
+@{
+    ViewData["Title"] = $"{Model.Title} ({Model.Code})";
+    string logId = ViewBag.LogId ?? $"{Model.LogIdPrefix}-{DateTime.Now:yyyyMMdd}-001";
+}
+
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="margin-bottom: 1rem;">
+        <a asp-action="Index" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">&larr; Back to Registers Directory</a>
+    </div>
+
+    <div class="card" style="border-top: 5px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
+        <div style="background: var(--primary); color: #fff; margin: -1.5rem -1.5rem 1.5rem -1.5rem; padding: 1.5rem; border-top-left-radius: 6px; border-top-right-radius: 6px;">
+            <div style="font-size: 0.8rem; color: #cbd5e1; font-style: italic; margin-bottom: 4px;">Home &gt; Operational List &gt; @Model.Title</div>
+            <h2 style="font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px;">@Model.Title.ToUpper()</h2>
+            <span class="badge badge-warning" style="margin-top: 6px;">@Model.Code &bull; @Model.Category</span>
+        </div>
+
+        <form method="post" asp-action="Submit" asp-route-id="@Model.Number">
+            <!-- System Generated Log ID -->
+            <div class="form-group" style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid var(--border);">
+                <label class="form-label" style="color: var(--primary); font-size: 0.95rem;">Log ID (System Generated)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" name="LogID" class="form-control" style="background: #e2e8f0; font-weight: 700; font-family: 'JetBrains Mono', monospace;" value="@logId" readonly />
+                    <span style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;">🔒 Auto-Incremented</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Fields -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                @foreach (var field in Model.Fields)
+                {
+                    bool isFullWidth = field.Type == "textarea" || field.Name == "Description" || field.Name == "NatureOfFailure" || field.Name == "EquipmentDetails";
+                    <div class="form-group" style="@(isFullWidth ? "grid-column: span 2;" : "")">
+                        <label class="form-label">
+                            @field.Label @(field.Required ? "*" : "")
+                        </label>
+
+                        @if (field.Type == "select")
+                        {
+                            <select name="@field.Name" class="form-control" @(field.Required ? "required" : "")>
+                                <option value="">-- Select @field.Label --</option>
+                                @foreach (var opt in field.Options)
+                                {
+                                    <option value="@opt">@opt</option>
+                                }
+                            </select>
+                        }
+                        else if (field.Type == "textarea")
+                        {
+                            <textarea name="@field.Name" class="form-control" rows="3" placeholder="Enter @field.Label details..." @(field.Required ? "required" : "")></textarea>
+                        }
+                        else if (field.Type == "datetime")
+                        {
+                            <input type="datetime-local" name="@field.Name" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" @(field.Required ? "required" : "") />
+                        }
+                        else if (field.Type == "date")
+                        {
+                            <input type="date" name="@field.Name" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" @(field.Required ? "required" : "") />
+                        }
+                        else if (field.Type == "number")
+                        {
+                            <input type="number" name="@field.Name" class="form-control" placeholder="0" value="@(field.Name == "SubmittedBy" ? ViewBag.StaffId : "")" @(field.Required ? "required" : "") />
+                        }
+                        else
+                        {
+                            <input type="text" name="@field.Name" class="form-control" placeholder="Enter @field.Label" value="@field.DefaultValue" @(field.Required ? "required" : "") />
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Action Buttons matching original WinForms Color Palette -->
+            <div style="display: flex; gap: 12px; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-success" style="padding: 12px 24px; font-size: 1rem; min-width: 140px;">
+                    💾 SAVE RECORD
+                </button>
+                <a asp-action="ViewRecords" asp-route-id="@Model.Number" class="btn btn-info" style="padding: 12px 20px; font-size: 0.95rem;">
+                    📋 VIEW RECORDS
+                </a>
+                <button type="reset" class="btn btn-warning" style="padding: 12px 20px; font-size: 0.95rem;">
+                    🔄 CLEAR
+                </button>
+                <a asp-action="Index" class="btn btn-danger" style="padding: 12px 20px; font-size: 0.95rem; margin-left: auto;">
+                    ✖ BACK
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

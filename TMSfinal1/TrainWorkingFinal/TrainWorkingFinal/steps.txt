@@ -1,0 +1,90 @@
+================================================================================
+TRAIN WORKING MANAGEMENT SYSTEM (TMS) — 100% TERMINAL COPY-PASTE GUIDE
+================================================================================
+
+This guide gives you step-by-step commands to run everything through Terminal 
+(PowerShell) starting on a clean Windows computer.
+
+================================================================================
+STEP 1: OPEN POWERSHELL AS ADMINISTRATOR
+================================================================================
+1. Press the Windows Key on your keyboard.
+2. Type "powershell".
+3. Right-click "Windows PowerShell" and click "Run as Administrator".
+
+
+================================================================================
+STEP 2: INSTALL PREREQUISITES (ONE-TIME SETUP)
+================================================================================
+Copy and paste these commands one by one into PowerShell:
+
+A. Install .NET Framework 4.7.2:
+   winget install Microsoft.DotNet.Framework.DeveloperPack_4 -e --accept-package-agreements --accept-source-agreements
+
+B. Install Microsoft SQL Server 2022 Express (Database Engine):
+   winget install Microsoft.SQLServer.2022.Express -e --accept-package-agreements --accept-source-agreements
+
+C. Install SQL Server Management Studio (SSMS):
+   winget install Microsoft.SQLServerManagementStudio -e --accept-package-agreements --accept-source-agreements
+
+* Optional: Start SQL Server service if needed:
+   Start-Service MSSQL$SQLEXPRESS
+
+
+================================================================================
+STEP 3: ENTER PROJECT FOLDER
+================================================================================
+   cd "c:\Users\Asus\Zeta_resp\TMSfinal1\TrainWorkingFinal"
+
+
+================================================================================
+STEP 4: RESTORE DATABASE WITH ALL STORED DATA (TrainManagementDB.bak)
+================================================================================
+Run this command inside the project folder:
+
+   powershell -ExecutionPolicy Bypass -File ".\Database\Restore-Database.ps1"
+
+-> You will see:
+   [SUCCESS] Database 'TrainManagementDB' has been successfully restored on instance 'localhost\SQLEXPRESS'!
+   All authority tables, accounts, and historical register data are loaded and ready.
+
+
+================================================================================
+STEP 5: LAUNCH THE APPLICATION
+================================================================================
+Run 1-click batch runner:
+
+   .\SETUP-AND-RUN.bat
+
+
+================================================================================
+STEP 6: LOGIN CREDENTIALS & VIEWING / ADDING STORED RECORDS
+================================================================================
+
+1. Administrator Login (Full Access):
+   - Click the "ADMIN" tab.
+   - Username: admin
+   - Password: Admin@123
+   - Click "SIGN IN AS ADMIN".
+
+2. Operator Login:
+   - Click the "OPERATOR / USER" tab.
+   - Enter your operator credentials (provided by Administrator).
+
+3. Viewing Pre-Loaded & Saved Records:
+   - On the dashboard, select any category:
+     * 1. Signal & Defective Authorities (Advance Authority T/369-3b, Caution Orders, Passing Signal ON)
+     * 2. Line Clear & Block Working (Line Clear Inquiry, Line Clear Tickets, Temporary Single Line Working)
+     * 3. Maintenance, S&T & Trolley (S&T Disconnection T/351, Motor Trolley T/1518, Shunting Orders T/806)
+     * 4. Emergency, Relief & Movements (Relief Train T/A 602, ABS Relief Engine, Train Movement Log)
+   - Open any authority form.
+   - Click the blue "VIEW RECORDS" button at the top-right.
+   - All historical records from SQL Server will load into the interactive grid.
+   - Open "Cross-Register Reports & Exports" to search, filter, and export reports to PDF/CSV/Excel.
+
+4. Adding New Records:
+   - Fill out the form fields.
+   - Click "SAVE AUTHORITY".
+   - The new record is permanently stored in the SQL Server database.
+
+================================================================================

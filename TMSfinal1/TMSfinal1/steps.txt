@@ -1,0 +1,120 @@
+================================================================================
+TRAIN MANAGEMENT SYSTEM (TMS) — 100% TERMINAL COPY-PASTE SETUP GUIDE
+================================================================================
+
+This guide gives you step-by-step commands to run everything through Terminal 
+(PowerShell) starting from unzipping the zip file on a clean Windows laptop.
+
+================================================================================
+STEP 1: OPEN POWERSHELL AS ADMINISTRATOR
+================================================================================
+1. Press the Windows Key on your keyboard.
+2. Type "powershell".
+3. Right-click "Windows PowerShell" and click "Run as Administrator".
+
+
+================================================================================
+STEP 2: INSTALL PREREQUISITES (ONE-TIME SETUP)
+================================================================================
+Copy and paste these commands one by one into PowerShell:
+
+A. Install .NET Framework 4.7.2:
+   winget install Microsoft.DotNet.Framework.DeveloperPack_4 -e --accept-package-agreements --accept-source-agreements
+
+B. Install Microsoft SQL Server 2022 Express (Database Engine):
+   winget install Microsoft.SQLServer.2022.Express -e --accept-package-agreements --accept-source-agreements
+
+C. Install SQL Server Management Studio (SSMS):
+   winget install Microsoft.SQLServerManagementStudio -e --accept-package-agreements --accept-source-agreements
+
+* Optional: Start SQL Server service if needed:
+   Start-Service MSSQL$SQLEXPRESS
+
+
+================================================================================
+STEP 3: UNZIP & ENTER THE PROJECT FOLDER
+================================================================================
+If your "TMSfinal1.zip" is in your Downloads folder, run:
+
+   cd "$HOME\Downloads"
+   Expand-Archive -Path "TMSfinal1.zip" -DestinationPath "$HOME\Downloads\TMSfinal1_Extracted" -Force
+   cd "$HOME\Downloads\TMSfinal1_Extracted\TMSfinal1"
+
+(If the zip is on your Desktop, replace "$HOME\Downloads" with "$HOME\Desktop")
+
+
+================================================================================
+STEP 4: RESTORE DATABASE WITH ALL STORED DATA (TMS_2024_New.bak)
+================================================================================
+Run this command inside the project folder:
+
+   powershell -ExecutionPolicy Bypass -File ".\Database\Restore-Database.ps1"
+
+-> You will see:
+   [SUCCESS] Database 'TMS_2024_New' has been successfully restored on instance 'localhost\SQLEXPRESS'!
+   All 50 tables, accounts, and historical register data are loaded and ready.
+
+
+================================================================================
+STEP 5: LAUNCH THE APPLICATION
+================================================================================
+Run this command in PowerShell:
+
+   .\TMSfinal1\bin\Debug\TMSfinal1.exe
+
+(Or double-click "SETUP-AND-RUN.bat" in the folder).
+
+
+================================================================================
+STEP 6: LOGIN CREDENTIALS & VIEWING / ADDING STORED RECORDS
+================================================================================
+
+1. Administrator Login (Full Access):
+   - Click the "ADMIN" tab.
+   - Username: admin
+   - Password: Admin@123
+   - Click "SIGN IN AS ADMIN".
+
+2. Operator Login:
+   - Click the "USER" tab.
+   - Username: sas
+   - (Or click "Create New Account" to register a new user).
+
+3. How to View Pre-Loaded & Saved Records:
+   - On the dashboard, select any category:
+     * Operational List (Station Diary, Train Signal, Caution Order, SWR, etc.)
+     * Maintenance Sub (Failure Register, Disconnection/Reconnection, etc.)
+     * Infrastructure Sub (Power Supply, Traffic Block, Petty Repair, etc.)
+     * Safety List (Emergency Key, Safety Meeting, Complete Arrival, etc.)
+   - Open any register (e.g. REG-001 Station Master's Diary).
+   - Click the blue "VIEW RECORDS" button at the top-right.
+   - All historical records from SQL Server will load into the interactive grid.
+   - Open "REG-041 Dynamic Reports" to search, filter, and export reports to PDF/CSV/Excel.
+
+4. Adding New Records:
+   - Fill out the form fields.
+   - Click "SAVE RECORD".
+   - The new record is permanently stored into the SQL Server database.
+
+
+================================================================================
+⚡ QUICK SUMMARY: ALL TERMINAL COMMANDS IN SEQUENCE
+================================================================================
+
+# 1. Install Dependencies:
+winget install Microsoft.DotNet.Framework.DeveloperPack_4 -e --accept-package-agreements --accept-source-agreements
+winget install Microsoft.SQLServer.2022.Express -e --accept-package-agreements --accept-source-agreements
+winget install Microsoft.SQLServerManagementStudio -e --accept-package-agreements --accept-source-agreements
+
+# 2. Extract & Enter Folder:
+cd "$HOME\Downloads"
+Expand-Archive -Path "TMSfinal1.zip" -DestinationPath "$HOME\Downloads\TMSfinal1_Extracted" -Force
+cd "$HOME\Downloads\TMSfinal1_Extracted\TMSfinal1"
+
+# 3. Restore Database:
+powershell -ExecutionPolicy Bypass -File ".\Database\Restore-Database.ps1"
+
+# 4. Launch Application:
+.\TMSfinal1\bin\Debug\TMSfinal1.exe
+
+================================================================================
